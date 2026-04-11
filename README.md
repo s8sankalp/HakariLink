@@ -1,10 +1,6 @@
 # Zurl - Advanced URL Shortener
 
-<div align="center">
-  <img src="./architecture.png" alt="Zurl System Architecture" width="800" />
-</div>
 
-> **Note:** Please ensure you save the uploaded architecture image as `architecture.png` in the root folder so it renders above. 
 
 ## 📝 Description
 Zurl is a full-stack, highly scalable URL shortener application. It allows users to convert long, unwieldy links into clean, trackable short URLs. It is designed with robust analytics tracking, a modern minimalistic frontend, and secure JWT-based authentication. 
