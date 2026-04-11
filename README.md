@@ -29,6 +29,9 @@ Zurl is a full-stack, highly scalable URL shortener application. It allows users
 - **Lucide React** (Iconography)
 
 ## 🏗️ Architecture Overview
+
+![Zurl System Architecture](architecture.png)
+
 The application is architected as a Client-Server application:
 - **Client**: A Single Page Application (SPA) utilizing React Router for navigation and structured inside a unified monolithic styling system via Tailwind.
 - **Gateway & Access**: The Spring Security context natively secures protected routes behind `/api/urls/**` using stateless JWT tokens parsed in authorization headers.
