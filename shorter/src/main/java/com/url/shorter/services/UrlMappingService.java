@@ -61,6 +61,16 @@ String shortURl=generateShortUrl();
                 .map(this::convertToDto)
                 .toList();
     }
+
+    public void deleteUrl(Long urlId, User user) {
+        UrlMapping mapping = urlMappingRepository.findById(urlId)
+                .orElseThrow(() -> new RuntimeException("URL not found"));
+        // Ensure that the user deleting the URL actually owns it
+        if (!mapping.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized to delete this URL");
+        }
+        urlMappingRepository.delete(mapping);
+    }
     public List<ClickEventDTO> getClickEventsByDate(String shortUrl,LocalDateTime start,LocalDateTime end)
     {
         UrlMapping urlMapping=urlMappingRepository.findByShortUrl(shortUrl);

@@ -40,6 +40,18 @@ public class UrlMappingContoller {
         List<UrlMappingDTO>urls=urlMappingService.getUrlsByUser(user);
         return ResponseEntity.ok(urls);
     }
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deleteUrl(@PathVariable Long id, Principal principal) {
+        try {
+            User user = userService.findByUsername(principal.getName());
+            urlMappingService.deleteUrl(id, user);
+            return ResponseEntity.ok("URL deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @GetMapping("/analytics/{shorturl}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<ClickEventDTO>> getUrlAnalytics(@PathVariable String shorturl, @RequestParam("startDate")String startDate,

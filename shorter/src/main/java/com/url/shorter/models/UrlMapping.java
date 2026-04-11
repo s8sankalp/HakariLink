@@ -17,10 +17,11 @@ public class UrlMapping {
     private String shortUrl;
     private int clickCount=0;
     private LocalDateTime createdDate;
-    @ManyToOne//we are making many-to-one relationship with the user
-    @JoinColumn(name= "user_id")//this specifies the foreign key linking of this to the user table
+    @ManyToOne
+    @JoinColumn(name= "user_id")
     private User user;
-    @OneToMany(mappedBy = "urlMapping")
+    
+    @OneToMany(mappedBy = "urlMapping", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClickEvent> clickEvents;
 
 }
