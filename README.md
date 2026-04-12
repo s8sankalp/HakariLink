@@ -1,122 +1,185 @@
-# Zurl - Advanced URL Shortener
+# Zurl — URL Shortener
 
+> A full-stack, production-ready URL shortener with analytics, JWT authentication, and a modern dashboard.
 
-
-## 📝 Description
-Zurl is a full-stack, highly scalable URL shortener application. It allows users to convert long, unwieldy links into clean, trackable short URLs. It is designed with robust analytics tracking, a modern minimalistic frontend, and secure JWT-based authentication. 
-
-## ✨ Key Features
-- **URL Shortening**: Generates short aliases for lengthy destination URLs.
-- **Dynamic Redirection**: Automatically resolves and performs `302 Found` redirects when users visit the shortened endpoints.
-- **Click Analytics Model**: Tracks the date and aggregate of clicks over localized date ranges.
-- **Secure Authentication**: End-to-end user registration and JWT-based session configuration managed by Spring Security.
-- **Link Management**: A premium, responsive Dashboard allowing users to search, instantly copy, and delete their generated links.
-
-## 💻 Tech Stack
-### Backend
-- **Java 17** 
-- **Spring Boot 4.0.4**
-- **Spring Security** (JWT API)
-- **Spring Data JPA & Hibernate**
-- **MySQL Connector/J**
-
-### Frontend
-- **React 19**
-- **Vite 8**
-- **Tailwind CSS V4**
-- **Axios** (API fetching)
-- **Recharts** (Data visualization infrastructure)
-- **Lucide React** (Iconography)
-
-## 🏗️ Architecture Overview
+🌐 **Live Demo:** [zurl-rho.vercel.app](https://zurl-rho.vercel.app)
 
 ![Zurl System Architecture](architecture.png)
 
-The application is architected as a Client-Server application:
-- **Client**: A Single Page Application (SPA) utilizing React Router for navigation and structured inside a unified monolithic styling system via Tailwind.
-- **Gateway & Access**: The Spring Security context natively secures protected routes behind `/api/urls/**` using stateless JWT tokens parsed in authorization headers.
-- **Data Persistence**: A relational Database Engine executing transactions using Hibernate ORM via `UrlMapping` and `ClickEvent` relational mappings. Note: The codebase relies natively on a unified MySQL data-source. 
+---
+
+## ✨ Features
+
+- 🔗 **URL Shortening** — Turn long URLs into clean, shareable short links
+- 📊 **Click Analytics** — Track total clicks and daily trends per link with charts
+- 🔐 **JWT Authentication** — Secure user registration and login with Spring Security
+- 📋 **Link Management** — Copy, delete, and search your links from a sleek dashboard
+- ⏳ **Loading States** — Smooth skeleton loaders so there are no blank screens
+- 🐳 **Dockerized** — Backend containerized and deployed via Docker on Render
+- 🚀 **Production Deployed** — Frontend on Vercel, backend on Render, database on NeonDB (PostgreSQL)
+
+---
+
+## 💻 Tech Stack
+
+### Backend
+| Technology | Purpose |
+|---|---|
+| Java 17 | Core language |
+| Spring Boot 4.0.4 | Application framework |
+| Spring Security + JWT | Authentication & authorization |
+| Spring Data JPA + Hibernate | ORM & database access |
+| PostgreSQL (NeonDB) | Production database |
+| Docker | Containerization |
+| Render | Hosting |
+
+### Frontend
+| Technology | Purpose |
+|---|---|
+| React 19 | UI framework |
+| Vite 8 | Build tool |
+| Tailwind CSS v4 | Styling |
+| Axios | HTTP client |
+| Recharts | Data visualization |
+| Lucide React | Icons |
+| Vercel | Hosting |
+
+---
+
+## 🏗️ Architecture
+
+The app is a classic Client-Server architecture:
+
+- **Frontend (Vercel)**: React SPA with React Router. Communicates with the backend via REST APIs using Axios.
+- **Backend (Render)**: Spring Boot REST API secured with JWT. Handles URL shortening, redirection, authentication, and analytics.
+- **Database (NeonDB)**: Cloud-hosted PostgreSQL. Entities include `User`, `UrlMapping`, and `ClickEvent`.
+- **CORS**: Configured in `WebSecurityConfig.java` to explicitly allow requests from the Vercel frontend.
+
+---
 
 ## 📁 Folder Structure
+
 ```text
 HakariLink/
-├── HakariLink-frontend/          # React SPA directory
+├── HakariLink-frontend/           # React SPA
 │   ├── src/
-│   │   ├── components/           # Reusable UI elements (Buttons, Modals, Inputs)
-│   │   ├── context/              # Global state (AuthContext.jsx)
-│   │   ├── layouts/              # Routing wrappers (DashboardLayout.jsx) 
-│   │   ├── lib/                  # Utilities and Axios integration
-│   │   ├── pages/                # Page views (Dashboard, Links, Auth, etc)
-│   │   └── index.css             # Tailwind token configuration
-│   ├── package.json              # Frontend dependencies
-│   └── vite.config.js            # Bundler configuration
-├── shorter/                      # Spring Boot Backend directory
+│   │   ├── components/            # Reusable UI (Loader, ShortenModal, etc.)
+│   │   ├── context/               # AuthContext (JWT state management)
+│   │   ├── layouts/               # DashboardLayout with sidebar
+│   │   ├── lib/                   # Axios API client (api.js)
+│   │   └── pages/                 # Dashboard, Links, Analytics, Auth pages
+│   ├── vercel.json                # SPA routing config for Vercel
+│   ├── .env                       # VITE_API_URL (not committed)
+│   └── vite.config.js             # Vite bundler config
+├── shorter/                       # Spring Boot Backend
 │   ├── src/main/java/com/url/shorter/
-│   │   ├── Controller/           # API Endpoints (Auth & URL Mapping)
-│   │   ├── dtos/                 # Data Transfer Objects
-│   │   ├── models/               # Hibernate Entities (UrlMapping, User, ClickEvent)
-│   │   ├── repository/           # JPA Repositories
-│   │   └── services/             # Core business logic configuration
-│   └── pom.xml                   # Maven dependencies and plugins
-└── README.md                     # Project Documentation
+│   │   ├── Controller/            # REST endpoints (Auth, URL Mapping)
+│   │   ├── dtos/                  # Data Transfer Objects
+│   │   ├── models/                # JPA Entities (User, UrlMapping, ClickEvent)
+│   │   ├── repository/            # Spring Data JPA repositories
+│   │   ├── security/              # JWT filter, WebSecurityConfig (CORS)
+│   │   └── services/              # Business logic
+│   ├── Dockerfile                 # Multi-stage Docker build
+│   ├── .env.prod                  # Production DB credentials (not committed)
+│   └── pom.xml                    # Maven dependencies
+└── README.md
 ```
 
-## 🚀 Installation & Usage
+---
+
+## 🚀 Local Development
+
 ### Prerequisites
 - Java 17
 - Node.js & npm
-- A running MySQL Database on `localhost:3306`
+- Docker (optional, for running backend locally via container)
+- A running PostgreSQL or MySQL database
 
-### 1. Database Configuration
-By default, the backend searches for a MySQL connection. Ensure your local MySQL instance contains a database named `urlshortnerdb` (or as defined in `application.properties`).
+### 1. Backend Setup
+Create a `shorter/.env` file:
+```env
+DATABASE_URL=jdbc:mysql://localhost:3306/urlshortnerdb
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=yourpassword
+DATABASE_DRIVER=com.mysql.cj.jdbc.Driver
+DATABASE_DIALECT=org.hibernate.dialect.MySQLDialect
+JWT_SECRET=your_jwt_secret
+```
 
-### 2. Running the Spring Boot Backend
-Navigate to the backend directory and trigger the Maven wrapper:
+Then run:
 ```bash
 cd shorter
-./mvnw clean install
 ./mvnw spring-boot:run
 ```
-The server will bind to `localhost:8080`.
+Backend starts at `http://localhost:8080`.
 
-### 3. Running the React Frontend
-Open a new terminal and navigate to the frontend directory:
+### 2. Frontend Setup
+Create a `HakariLink-frontend/.env` file:
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+Then run:
 ```bash
 cd HakariLink-frontend
 npm install
 npm run dev
 ```
-The frontend will spawn gracefully on `http://localhost:5173`. 
-
-## 🔐 Environment Variables
-### Backend (shorter/src/main/resources/application.properties)
-Currently, variables are hardcoded or read directly from application properties. Ensure you align:
-- `spring.datasource.url` (Default: `jdbc:mysql://localhost:3306/urlshortnerdb`)
-- `spring.datasource.username`
-- `spring.datasource.password`
-
-### Frontend (.env)
-*(Not explicitly found in codebase, but recommended for production deployment via `VITE_API_BASE_URL`)*. Currently routes proxy over Axios bindings natively.
-
-## 🔌 API Documentation
-### Public Endpoints
-- `POST /api/auth/public/login` | **Payload:** `{ username, password }` | **Response:** JWT Token string
-- `POST /api/auth/public/register` | **Payload:** User object
-
-### Protected Endpoints (Requires `Authorization: Bearer <Token>`)
-- `POST /api/urls/shorten` | **Payload:** `{ originalUrl: string }` | **Response:** URLMapping object featuring the `shortUrl`
-- `GET /api/urls/myurls` | Returns full list of user URL mappings.
-- `DELETE /api/urls/{id}` | Permanently cascades and purges URL mapping and related events.
-- `GET /api/urls/totalClicks?startDate=xx&endDate=xx` | Provides absolute counts for localized charting ranges.
-
-### Redirection
-- `GET /{shortUrl}` | Reaches the frontend first, but must be configured or directly accessed via `:8080` to issue standard HTTP 302 resolutions overriding directly to `originalUrl`.
-
-## 🤝 Contributing
-The software relies on the standard GitHub Fork & PR protocol. Open issues in tracking before pushing massive feature overhauls.
-
-## 📄 License
-This project operates under the standard open-source framework *(No explicit license detected in codebase)*.
+Frontend starts at `http://localhost:5173`.
 
 ---
-**Author**: S8Sankalp (Inferred from Git Configuration). 
+
+## 🐳 Docker (Backend)
+
+```bash
+# Build for production (linux/amd64 for cloud deployments)
+docker build --platform linux/amd64 -t s8sankalp/shorter-backend .
+
+# Run locally
+docker run -p 8080:8080 shorter-backend
+
+# Push to Docker Hub
+docker push s8sankalp/shorter-backend
+```
+
+---
+
+## 🔌 API Reference
+
+### Public Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/public/register` | Register a new user |
+| `POST` | `/api/auth/public/login` | Login, returns JWT token |
+| `GET`  | `/{shortUrl}` | Redirect to original URL |
+
+### Protected Endpoints (Requires `Authorization: Bearer <token>`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/urls/shorten` | Shorten a URL |
+| `GET`  | `/api/urls/myurls` | Get all user's URLs |
+| `DELETE` | `/api/urls/{id}` | Delete a URL |
+| `GET`  | `/api/urls/totalClicks` | Get total click analytics |
+| `GET`  | `/api/urls/{shortUrl}` | Get individual URL analytics |
+
+---
+
+## 🌍 Deployment
+
+| Service | Platform | URL |
+|---------|----------|-----|
+| Frontend | Vercel | [zurl-rho.vercel.app](https://zurl-rho.vercel.app) |
+| Backend | Render (Docker) | [shorter-backend.onrender.com](https://shorter-backend.onrender.com) |
+| Database | NeonDB (PostgreSQL) | Cloud |
+
+> ⚠️ Render free tier sleeps after inactivity. The first request may take ~30 seconds to wake the server.
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+**Author**: [@s8sankalp](https://github.com/s8sankalp)
