@@ -61,7 +61,7 @@ export default function LandingPage() {
           <FeatureCard 
             icon={<BarChart3 className="w-6 h-6" />}
             title="Analytics tracking"
-            description="Get detailed insights into your audience, from location to device type, in real-time."
+            description="Get detailed insights into your audience and track your link clicks in real-time."
           />
           <FeatureCard 
             icon={<LinkIcon className="w-6 h-6" />}

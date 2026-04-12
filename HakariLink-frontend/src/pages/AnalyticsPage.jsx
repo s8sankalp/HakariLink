@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { api } from "../lib/api";
+import Loader from "../components/ui/Loader";
 
 export default function AnalyticsPage() {
   const [data, setData] = useState([]);
-  const [devices] = useState([]); // Kept empty as DB doesn't support it
-  const [locations] = useState([]); // Kept empty as DB doesn't support it
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,6 +44,10 @@ export default function AnalyticsPage() {
     fetchAnalytics();
   }, []);
 
+  if (loading) {
+    return <Loader message="Loading analytics..." emoji="📊" fullScreen />;
+  }
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <Card>
@@ -74,52 +78,7 @@ export default function AnalyticsPage() {
         </CardContent>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Device Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {devices.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">No device data available.</p>
-              ) : (
-                devices.map(device => (
-                  <div key={device.name} className="flex items-center justify-between">
-                    <div className="font-medium">{device.name}</div>
-                    <div className="flex items-center gap-4 w-1/2">
-                      <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-                        <div className="h-full bg-primary" style={{ width: `${device.value}%` }} />
-                      </div>
-                      <span className="text-sm text-muted-foreground w-8">{device.value}%</span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Top Locations</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {locations.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">No location data available.</p>
-              ) : (
-                locations.map((loc) => (
-                  <div key={loc.country} className="flex items-center justify-between py-1 border-b border-border last:border-0 hover:bg-secondary/20 transition-colors rounded px-2 -mx-2">
-                    <span className="font-medium text-sm">{loc.country}</span>
-                    <span className="text-sm text-muted-foreground">{loc.clicks} clicks</span>
-                  </div>
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+
     </div>
   );
 }

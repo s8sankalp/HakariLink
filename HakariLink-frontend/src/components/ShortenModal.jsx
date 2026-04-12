@@ -31,7 +31,7 @@ export default function ShortenModal() {
       });
       setResult({
         original: response.data.originalUrl,
-        short: `http://localhost:8080/${response.data.shortUrl}`
+        short: `${import.meta.env.VITE_API_URL || "http://localhost:8080"}/${response.data.shortUrl}`
       });
     } catch (err) {
       console.error(err);

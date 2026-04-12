@@ -3,6 +3,7 @@ import { Copy, TrendingUp, Link as LinkIcon, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { api } from "../lib/api";
+import Loader from "../components/ui/Loader";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState([
@@ -12,6 +13,7 @@ export default function DashboardPage() {
   ]);
 
   const [recentLinks, setRecentLinks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -42,10 +44,16 @@ export default function DashboardPage() {
         setRecentLinks(formattedRecent);
       } catch (err) {
         console.error("Failed to load dashboard data", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchDashboardData();
   }, []);
+
+  if (loading) {
+    return <Loader message="Fetching your dashboard..." emoji="🚀" fullScreen />;
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -84,7 +92,7 @@ export default function DashboardPage() {
               recentLinks.map(link => (
                 <div key={link.id} className="p-4 flex items-center justify-between hover:bg-secondary/30 transition-colors">
                   <div className="space-y-1 overflow-hidden pr-4">
-                    <a href={`http://localhost:8080/${link.short}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary truncate block hover:underline">
+                    <a href={`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/${link.short}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary truncate block hover:underline">
                       zurl.co/{link.short}
                     </a>
                     <p className="text-sm text-muted-foreground truncate">{link.original}</p>
@@ -100,7 +108,7 @@ export default function DashboardPage() {
                       variant="outline" 
                       size="icon" 
                       className="h-8 w-8 text-muted-foreground hover:text-primary"
-                      onClick={() => navigator.clipboard.writeText(`http://localhost:8080/${link.short}`)}
+                      onClick={() => navigator.clipboard.writeText(`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/${link.short}`)}
                     >
                       <Copy size={14} />
                     </Button>

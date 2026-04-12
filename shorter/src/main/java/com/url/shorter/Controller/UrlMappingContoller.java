@@ -41,6 +41,17 @@ public class UrlMappingContoller {
         return ResponseEntity.ok(urls);
     }
     
+    @GetMapping("/{shorturl}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UrlMappingDTO> getUrlMapping(@PathVariable String shorturl, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        UrlMappingDTO urlMappingDTO = urlMappingService.getMappingByShortUrlAndUser(shorturl, user);
+        if (urlMappingDTO != null) {
+            return ResponseEntity.ok(urlMappingDTO);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteUrl(@PathVariable Long id, Principal principal) {

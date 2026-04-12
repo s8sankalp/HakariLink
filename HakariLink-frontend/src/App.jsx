@@ -12,6 +12,7 @@ import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
 import LinksPage from "./pages/LinksPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import UrlAnalyticsPage from "./pages/UrlAnalyticsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 // Components
@@ -50,6 +51,7 @@ export default function App() {
             <Route index element={<DashboardPage />} />
             <Route path="links" element={<LinksPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
+            <Route path="analytics/:shortUrl" element={<UrlAnalyticsPage />} />
           </Route>
           
           {/* 404 Route */}

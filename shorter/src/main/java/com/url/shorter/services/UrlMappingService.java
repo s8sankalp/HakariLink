@@ -62,6 +62,14 @@ String shortURl=generateShortUrl();
                 .toList();
     }
 
+    public UrlMappingDTO getMappingByShortUrlAndUser(String shorturl, User user) {
+        UrlMapping mapping = urlMappingRepository.findByShortUrl(shorturl);
+        if (mapping != null && mapping.getUser().getId().equals(user.getId())) {
+            return convertToDto(mapping);
+        }
+        return null;
+    }
+
     public void deleteUrl(Long urlId, User user) {
         UrlMapping mapping = urlMappingRepository.findById(urlId)
                 .orElseThrow(() -> new RuntimeException("URL not found"));

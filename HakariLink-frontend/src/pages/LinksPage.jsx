@@ -3,14 +3,19 @@ import { Copy, MoreHorizontal, Search, Trash } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { api } from "../lib/api";
+import Loader from "../components/ui/Loader";
+import { useNavigate } from "react-router-dom";
+import { BarChart2 } from "lucide-react";
 
 export default function LinksPage() {
   const [links, setLinks] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const handleCopy = (shortUrl) => {
-    navigator.clipboard.writeText(`http://localhost:8080/${shortUrl}`);
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    navigator.clipboard.writeText(`${baseUrl}/${shortUrl}`);
   };
 
   const handleDelete = async (id) => {
@@ -49,6 +54,10 @@ export default function LinksPage() {
       link.original.includes(search) || link.short.includes(search)
   );
 
+  if (loading) {
+    return <Loader message="Fetching your links..." emoji="🔗" fullScreen />;
+  }
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex sm:flex-row flex-col sm:items-center justify-between gap-4">
@@ -79,7 +88,7 @@ export default function LinksPage() {
               {filteredLinks.map((link) => (
                 <tr key={link.id} className="hover:bg-secondary/20 transition-colors">
                   <td className="px-6 py-4">
-                    <a href={`http://localhost:8080/${link.short}`} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">
+                    <a href={`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/${link.short}`} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">
                       zurl.co/{link.short}
                     </a>
                   </td>
@@ -90,10 +99,13 @@ export default function LinksPage() {
                   <td className="px-6 py-4 text-muted-foreground">{link.date}</td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" onClick={() => handleCopy(link.short)}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" onClick={() => handleCopy(link.short)} title="Copy URL">
                         <Copy size={16} />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-red-600" onClick={() => handleDelete(link.id)}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" onClick={() => navigate(`/dashboard/analytics/${link.short}`)} title="View Analytics">
+                        <BarChart2 size={16} />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-red-600" onClick={() => handleDelete(link.id)} title="Delete URL">
                         <Trash size={16} />
                       </Button>
                     </div>
