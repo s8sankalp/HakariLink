@@ -70,7 +70,7 @@ export default function UrlAnalyticsPage() {
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <div className="overflow-hidden">
-          <h1 className="text-2xl font-bold tracking-tight">Analytics for zurl.co/{shortUrl}</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Analytics for {(import.meta.env.VITE_API_URL || "http://localhost:8080")}/{shortUrl}</h1>
           <a href={urlData.originalUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:underline text-sm block max-w-full truncate">
             {urlData.originalUrl}
           </a>

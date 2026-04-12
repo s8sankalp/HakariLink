@@ -93,7 +93,7 @@ export default function DashboardPage() {
                 <div key={link.id} className="p-4 flex items-center justify-between hover:bg-secondary/30 transition-colors">
                   <div className="space-y-1 overflow-hidden pr-4">
                     <a href={`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/${link.short}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary truncate block hover:underline">
-                      zurl.co/{link.short}
+                      {(import.meta.env.VITE_API_URL || "http://localhost:8080")}/{link.short}
                     </a>
                     <p className="text-sm text-muted-foreground truncate">{link.original}</p>
                   </div>

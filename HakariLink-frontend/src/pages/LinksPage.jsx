@@ -89,7 +89,7 @@ export default function LinksPage() {
                 <tr key={link.id} className="hover:bg-secondary/20 transition-colors">
                   <td className="px-6 py-4">
                     <a href={`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/${link.short}`} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline">
-                      zurl.co/{link.short}
+                      {(import.meta.env.VITE_API_URL || "http://localhost:8080")}/{link.short}
                     </a>
                   </td>
                   <td className="px-6 py-4 text-muted-foreground truncate max-w-[200px]" title={link.original}>
